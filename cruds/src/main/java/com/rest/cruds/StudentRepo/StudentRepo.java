@@ -17,4 +17,8 @@ public interface StudentRepo extends JpaRepository<Student, Long> {
 	 
 	@Query("SELECT s FROM Student s WHERE s.studentAddress IN ('Hyderabad', 'Paris')")
 	List<Student> findCity();
+
+	Student getById(int i);
+
+	Student deleteById(int i);
 }
