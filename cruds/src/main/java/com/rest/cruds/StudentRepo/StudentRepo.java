@@ -1,6 +1,7 @@
 package com.rest.cruds.StudentRepo;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +22,7 @@ public interface StudentRepo extends JpaRepository<Student, Long> {
 	Student getById(int i);
 
 	Student deleteById(int i);
+
+	Optional<Student> findByStudentName(String studentName);
+
 }

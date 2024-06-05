@@ -3,6 +3,7 @@ package com.rest.cruds.controller;
 import java.util.List;
 import java.util.Optional;
 
+import com.rest.cruds.service.Studentservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,18 +27,21 @@ public class Studentcontroller {
 	
 	@Autowired
 	private CourseRepo courseRepo;
+
+	@Autowired
+	private Studentservice studentservice;
 	
 	// Create student details to database
 	@PostMapping("/api/students")
-	public ResponseEntity<Student> saveStudent(@RequestBody Student student) {
-		studentRepo.save(student);
+	public ResponseEntity<Student>  saveStudent(@RequestBody Student student) {
+		studentservice.SaveStudent(student);
 		return new ResponseEntity<> (student, HttpStatus.CREATED);
 	}
 	
 	// Get Request
 	@GetMapping("/api/students")
 	public ResponseEntity<List<Student>> getStudents() {
-		return new ResponseEntity<>(studentRepo.findAll(), HttpStatus.OK);
+		return new ResponseEntity<>(studentservice.FindAll(), HttpStatus.OK);
 	}
 	
 	// Get method is to get all items from database
@@ -48,17 +52,15 @@ public class Studentcontroller {
 				.orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 	
-	// Put method is to update specified id
+
 	@PutMapping("/api/students/{id}")
 	public ResponseEntity<Student> updateStudent(@PathVariable long id, @RequestBody Student stud) {
-		Optional<Student> student = studentRepo.findById(id);
-		if (student.isPresent()) {
-			Student updatedStudent = student.get();
-			updatedStudent.setStudentName(stud.getStudentName());
-			updatedStudent.setStudentEmail(stud.getStudentEmail());
-			updatedStudent.setStudentAddress(stud.getStudentAddress());
-			return new ResponseEntity<>(studentRepo.save(updatedStudent), HttpStatus.OK);
-		} else {
+		Student updateds=studentservice.findStudentById(id);
+		if(updateds!=null)
+		{
+			return new ResponseEntity<>(studentRepo.save(updateds), HttpStatus.OK);
+		}
+		else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
